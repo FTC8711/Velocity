@@ -39,19 +39,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-/**
- * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
- * the autonomous or the teleop period of an FTC match. The names of OpModes appear on the menu
- * of the FTC Driver Station. When an selection is made from the menu, the corresponding OpMode
- * class is instantiated on the Robot Controller and executed.
- *
- * This particular OpMode just executes a basic Tank Drive Teleop for a PushBot
- * It includes all the skeletal structure that all linear OpModes contain.
- *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
- */
-
 @Autonomous(name="Blue1", group="blue")  // @Autonomous(...) is the other common choice
 
 public class AutoBlue extends LinearOpMode {
@@ -64,6 +51,7 @@ public class AutoBlue extends LinearOpMode {
     static final double WHEEL_DIAMETER_INCHES = 4.0;     // For figuring circumference
     static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
+    boolean tape = false;
 
 
     @Override
@@ -79,7 +67,70 @@ public class AutoBlue extends LinearOpMode {
         launchParticles(0.8);
         r.blueBar.setPosition(1);
         encoderDrive(0.6, 10, 10, 5); //drive forward 10 inches at 60% power with a 5 second timeout
+        encoderDrive(0.5, -3, 3, 5); //turn right
+        encoderDrive(0.6, 10, 10, 5); //drive forward, aligning with wall
 
+        while(!tape && opModeIsActive()) {
+            //find white line
+            if(r.bottomLeft.blue() == 0) {
+                r.leftMotor1.setPower(-0.3);
+                r.rightMotor1.setPower(-0.3);
+                r.leftMotor2.setPower(-0.3);
+                r.rightMotor2.setPower(-0.3);
+
+            }
+            else {
+                r.leftMotor1.setPower(0);
+                r.rightMotor1.setPower(0);
+                r.leftMotor2.setPower(0);
+                r.rightMotor2.setPower(0);
+                tape = true;
+            }
+        }
+
+        if (isBlue()) {
+            r.bluePress1.setPosition(1);
+            sleep(1000);
+            r.bluePress1.setPosition(0);
+        }
+
+        else {
+            r.bluePress2.setPosition(1);
+            sleep(1000);
+            r.bluePress2.setPosition(0);
+        }
+
+        tape = false;
+
+        while(!tape && opModeIsActive()) {
+            //find second white line
+            if(r.bottomLeft.blue() == 0) {
+                r.leftMotor1.setPower(-0.3);
+                r.rightMotor1.setPower(-0.3);
+                r.leftMotor2.setPower(-0.3);
+                r.rightMotor2.setPower(-0.3);
+
+            }
+            else {
+                r.leftMotor1.setPower(0);
+                r.rightMotor1.setPower(0);
+                r.leftMotor2.setPower(0);
+                r.rightMotor2.setPower(0);
+                tape = true;
+            }
+        }
+
+        if (isBlue()) {
+            r.bluePress1.setPosition(1);
+            sleep(1000);
+            r.bluePress1.setPosition(0);
+        }
+
+        else {
+            r.bluePress2.setPosition(1);
+            sleep(1000);
+            r.bluePress2.setPosition(0);
+        }
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
@@ -102,10 +153,10 @@ public class AutoBlue extends LinearOpMode {
     }
 
     public boolean isBlue() {
-        if (r.blueBeacon.red() == 0) {
-            return true;
-        } else {
+        if (r.blueBeacon.red() > 0) {
             return false;
+        } else {
+            return true;
         }
     }
 
