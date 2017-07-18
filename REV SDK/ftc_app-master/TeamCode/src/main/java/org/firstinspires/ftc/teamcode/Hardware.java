@@ -36,7 +36,8 @@ public class Hardware
     public DcMotor  leftMotor2  = null;
     public DcMotor  rightMotor1 = null;
     public DcMotor  rightMotor2 = null;
-    public DcMotor  launcher    = null;
+    public DcMotor  launcher1    = null;
+    public DcMotor  launcher2    = null;
     public DcMotor  intake      = null;
 
     public ColorSensor bottomRight = null;
@@ -44,15 +45,11 @@ public class Hardware
     public ColorSensor blueBeacon = null;
     public ColorSensor redBeacon = null;
 
-    public Servo    particleGate = null;
+    public Servo particleFlip = null;
     public Servo blueBar = null;
-    public Servo bluePress1 = null;
-    public Servo bluePress2 = null;
-    public Servo redPress1 = null;
-    public Servo redPress2 = null;
+    public Servo bluePress = null;
+    public Servo redPress = null;
     public Servo redBar = null;
-
-    public DcMotor leftSet = null;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -73,14 +70,19 @@ public class Hardware
         leftMotor2   = hwMap.dcMotor.get("L2");
         rightMotor1  = hwMap.dcMotor.get("R1");
         rightMotor2 = hwMap.dcMotor.get("R2");
-        launcher    = hwMap.dcMotor.get("Launcher");
-        particleGate = hwMap.servo.get("Gate");
+        launcher1    = hwMap.dcMotor.get("launcher1");
+        launcher2    = hwMap.dcMotor.get("launcher2");
+        particleFlip = hwMap.servo.get("flip");
+        intake = hwMap.dcMotor.get("intake");
         blueBar  = hwMap.servo.get("blueBar");
         redBar = hwMap.servo.get("redBar");
-        bluePress1 = hwMap.servo.get("bluePress1");
-        bluePress2 = hwMap.servo.get("bluePress2");
-        redPress1 = hwMap.servo.get("redPress1");
-        redPress2 = hwMap.servo.get("redPress2");
+        bluePress = hwMap.servo.get("bluePress");
+        redPress = hwMap.servo.get("redPress");
+        bottomLeft = hwMap.colorSensor.get("br");
+        bottomRight = hwMap.colorSensor.get("bb");
+        blueBeacon = hwMap.colorSensor.get("tb");
+        redBeacon = hwMap.colorSensor.get("tr");
+
 
         leftMotor1.setDirection(DcMotor.Direction.REVERSE);
         leftMotor2.setDirection(DcMotor.Direction.REVERSE);// Set to REVERSE if using AndyMark motors
@@ -89,8 +91,10 @@ public class Hardware
 
         bottomLeft.setI2cAddress(I2cAddr.create8bit(0x6c));
         bottomRight.setI2cAddress(I2cAddr.create8bit(0x7c));
-        blueBeacon.setI2cAddress(I2cAddr.create8bit(0x4c));
-        redBeacon.setI2cAddress(I2cAddr.create8bit(0x5c));
+        blueBeacon.setI2cAddress(I2cAddr.create8bit(0x3c));
+        redBeacon.setI2cAddress(I2cAddr.create8bit(0x4c));
+
+
 
 
 
@@ -99,19 +103,16 @@ public class Hardware
         leftMotor2.setPower(0);
         rightMotor1.setPower(0);
         rightMotor2.setPower(0);
-        launcher.setPower(0);
+        launcher1.setPower(0);
+        launcher2.setPower(0);
+
 
         leftMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         rightMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        blueBar.setPosition(0);
-        redBar.setPosition(0);
-        bluePress1.setPosition(0);
-        bluePress2.setPosition(0);
-        redPress1.setPosition(0);
-        redPress2.setPosition(0);
+
+
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed

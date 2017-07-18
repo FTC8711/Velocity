@@ -33,69 +33,155 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="TeleOp", group="Iterative Opmode")  // @Autonomous(...) is the other common choice
-@Disabled
-public class TeleOp extends OpMode //basic drive for new bot
-{
+
+public class TeleOp extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     Hardware r       = new Hardware();
     public boolean rbButtonWatch = false;
 
     @Override
-    public void init() {
+    public void runOpMode() {
         telemetry.addData("Status", "Initialized");
         r.init(hardwareMap);
-    }
-
-
-    @Override
-    public void init_loop() {
-    }
-
-
-    @Override
-    public void start() {
-        runtime.reset();
-    }
-
-
-    @Override
-    public void loop() {
         telemetry.addData("Status", "Running: " + runtime.toString());
-        r.leftMotor1.setPower(gamepad1.left_stick_y);
-        r.leftMotor2.setPower(gamepad1.left_stick_y);
-        r.rightMotor1.setPower(gamepad1.right_stick_y);
-        r.rightMotor2.setPower(gamepad1.right_stick_y);
+        runtime.reset();
 
-        while (gamepad1.dpad_right) {
-            r.intake.setPower(1);
+
+
+        while (opModeIsActive()) {
+            telemetry.addData("Status", "Run Time: " + runtime.toString());
+            telemetry.update();
+            r.leftMotor1.setPower(gamepad1.left_stick_y);
+            r.leftMotor2.setPower(gamepad1.left_stick_y);
+            r.rightMotor1.setPower(gamepad1.right_stick_y);
+            r.rightMotor2.setPower(gamepad1.right_stick_y);
+
+            if (gamepad1.dpad_left) {
+                r.intake.setPower(-1);
+            }
+
+            if (gamepad1.dpad_down) {
+                r.intake.setPower(0);
+            }
+
+            if (gamepad2.left_bumper && !rbButtonWatch) {
+                r.launcher1.setPower(0.8);
+                r.launcher2.setPower(0.8);
+            } else {
+                r.launcher1.setPower(0);
+                r.launcher2.setPower(0);
+            }
+
+            rbButtonWatch = gamepad1.right_bumper;
+
+            if (gamepad2.y) {
+                r.particleFlip.setPosition(1);
+            }
+
+            else {
+                r.particleFlip.setPosition(0);
+            }
+
+            /*Thread operating = new Thread () { //includes all robot controls
+                public void run() {
+                    r.leftMotor1.setPower(gamepad1.left_stick_y);
+                    r.leftMotor2.setPower(gamepad1.left_stick_y);
+                    r.rightMotor1.setPower(gamepad1.right_stick_y);
+                    r.rightMotor2.setPower(gamepad1.right_stick_y);
+
+                    if (gamepad1.dpad_left) {
+                        r.intake.setPower(-1);
+                    }
+
+                    if (gamepad1.dpad_down) {
+                        r.intake.setPower(0);
+                    }
+
+                    if (gamepad2.left_bumper && !rbButtonWatch) {
+                        r.launcher1.setPower(0.8);
+                        r.launcher2.setPower(0.8);
+                    } else {
+                        r.launcher1.setPower(0);
+                        r.launcher2.setPower(0);
+                    }
+
+                    rbButtonWatch = gamepad1.right_bumper;
+
+                    if (gamepad2.y) {
+                        r.particleFlip.setPosition(1);
+                    }
+
+                    else {
+                        r.particleFlip.setPosition(0);
+                    }
+                }
+            };
+
+            Thread shooting = new Thread()  { //stops action and shoots 3 particles
+                public void run() {
+                    if (gamepad2.right_bumper) {
+                        runLauncher(0.8);
+                        mySleep(2000);
+                        r.particleFlip.setPosition(1);
+                        mySleep(800);
+                        r.particleFlip.setPosition(0);
+                        mySleep(1000);
+                        r.particleFlip.setPosition(1);
+                        mySleep(800);
+                        r.particleFlip.setPosition(0);
+                    }
+
+                }
+            };
+
+            operating.start();
+            shooting.start(); */
+
+
+
+            // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
+            // leftMotor.setPower(-gamepad1.left_stick_y);
+            // rightMotor.setPower(-gamepad1.right_stick_y);
         }
-
-        while (gamepad1.dpad_left) {
-            r.intake.setPower(-1);
-        }
-
-        r.intake.setPower(0);
-
-       if (gamepad1.right_bumper && !rbButtonWatch) {
-           r.launcher.setPower(0.8);
-       }
-
-        rbButtonWatch = gamepad1.right_bumper;
-
-
 
 
     }
 
+    public void stopRobot() {
+        r.leftMotor1.setPower(0);
+        r.leftMotor2.setPower(0);
+        r.rightMotor1.setPower(0);
+        r.rightMotor2.setPower(0);
 
-    @Override
-    public void stop() {
     }
+
+    public void runLauncher(double speed) {
+        r.launcher1.setPower(-speed);
+        r.launcher2.setPower(speed);
+    }
+
+    public void mySleep(long s) {
+        runtime.reset();
+        while (runtime.milliseconds() < s) {
+
+        }
+        return;
+    }
+
+
+
 
 }
+
+
+
+
+
+

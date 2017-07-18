@@ -64,11 +64,24 @@ public class AutoBlue extends LinearOpMode {
         runtime.reset();
         telemetry.addData("Status", "Running");
         telemetry.update();
-        launchParticles(0.8);
-        r.blueBar.setPosition(1);
-        encoderDrive(0.6, 10, 10, 5); //drive forward 10 inches at 60% power with a 5 second timeout
-        encoderDrive(0.5, -3, 3, 5); //turn right
-        encoderDrive(0.6, 10, 10, 5); //drive forward, aligning with wall
+        launchParticles(0.35);
+
+        r.rightMotor1.setPower(-0.8);
+        r.rightMotor2.setPower(-0.8);
+        r.leftMotor1.setPower(-0.8);
+        r.leftMotor2.setPower(-0.8);
+
+        sleep(1700);
+
+        r.rightMotor1.setPower(0);
+        r.rightMotor2.setPower(0);
+        r.leftMotor1.setPower(0);
+        r.leftMotor2.setPower(0);
+
+        /*r.blueBar.setPosition(0.45);
+        encoderDrive(0.6, -0.01, -0.01, 5); //drive forward 10 inches at 60% power with a 5 second timeout
+         //turn right
+         //drive forward, aligning with wall
 
         while(!tape && opModeIsActive()) {
             //find white line
@@ -89,15 +102,9 @@ public class AutoBlue extends LinearOpMode {
         }
 
         if (isBlue()) {
-            r.bluePress1.setPosition(1);
+            r.bluePress.setPosition(1);
             sleep(1000);
-            r.bluePress1.setPosition(0);
-        }
-
-        else {
-            r.bluePress2.setPosition(1);
-            sleep(1000);
-            r.bluePress2.setPosition(0);
+            r.bluePress.setPosition(0);
         }
 
         tape = false;
@@ -121,16 +128,16 @@ public class AutoBlue extends LinearOpMode {
         }
 
         if (isBlue()) {
-            r.bluePress1.setPosition(1);
+            r.bluePress.setPosition(1);
             sleep(1000);
-            r.bluePress1.setPosition(0);
+            r.bluePress.setPosition(0);
         }
 
         else {
-            r.bluePress2.setPosition(1);
+            r.bluePress.setPosition(1);
             sleep(1000);
-            r.bluePress2.setPosition(0);
-        }
+            r.bluePress.setPosition(0);
+        }*/
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
@@ -146,10 +153,24 @@ public class AutoBlue extends LinearOpMode {
 
 
     public void launchParticles(double speed) throws InterruptedException {
-        r.launcher.setPower(speed);
+        r.launcher1.setPower(-speed);
+        r.launcher2.setPower(speed);
         sleep(2000);
-        r.particleGate.setPosition(1);
-        sleep(3000);
+        r.particleFlip.setPosition(1);
+        sleep(800);
+        r.particleFlip.setPosition(0);
+        sleep(800);
+        r.particleFlip.setPosition(1);
+        sleep(800);
+        r.particleFlip.setPosition(0);
+        sleep(800);
+        r.particleFlip.setPosition(1);
+        sleep(800);
+        r.particleFlip.setPosition(0);
+        sleep(800);
+        r.launcher1.setPower(0);
+        r.launcher2.setPower(0);
+
     }
 
     public boolean isBlue() {
